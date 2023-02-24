@@ -43,7 +43,6 @@ class Graph:
     def add_edge(self, node1, node2, power_min, dist=1):
         """
         Adds an edge to the graph. Graphs are not oriented, hence an edge is added to the adjacency list of both end nodes. 
-
         Parameters: 
         -----------
         node1: NodeType
@@ -55,16 +54,66 @@ class Graph:
         dist: numeric (int or float), optional
             Distance between node1 and node2 on the edge. Default is 1.
         """
-        raise NotImplementedError
+        if node1 not in self.graph:
+            self.graph[node1] = []
+            self.nb_nodes += 1
+            self.nodes.append(node1)
+        if node2 not in self.graph:
+            self.graph[node2] = []
+            self.nb_nodes += 1
+            self.nodes.append(node2)
+
+        self.graph[node1].append((node2, power_min, dist))
+        self.graph[node2].append((node1, power_min, dist))
+        self.nb_edges += 1
     
+    def voisin_acc(self, node1, power):
+        v = []
+        for i in g.graph[node1]:
+            if i[1] <= power:
+                v.append(i[0])
+        return v
 
     def get_path_with_power(self, src, dest, power):
+
+        #On vérifie si src et dest sont dans le même composante connexe
+        for i in self.connected_components():
+            if src in i:
+                if dest not in i:
+                    return None
+
+        trajet = []                
+
+
         raise NotImplementedError
     
 
-    def connected_components(self):
-        raise NotImplementedError
+    def parcours_en_profondeur(self, node, seen=None):
+        if seen is None:
+            seen=[]
+        if node not in seen:
+            seen.append(node)
+            unseen=[]
+            for t in self.graph[node]:
+                if t[0] not in seen:
+                    unseen.append(t[0])
+            for node in unseen:
+                self.parcours_en_profondeur(node, seen)
+        return seen
 
+    def connected_components(self):
+        ccs=[]
+        for node in self.nodes:
+            if ccs==[]:        
+                ccs.append(self.parcours_en_profondeur(node))
+            else:
+                a=True
+                for cc in ccs:
+                    if node in cc:
+                        a=False
+                if a:
+                    ccs.append(self.parcours_en_profondeur(node))
+        return ccs
 
     def connected_components_set(self):
         """
@@ -81,23 +130,31 @@ class Graph:
 
 
 def graph_from_file(filename):
-    """
-    Reads a text file and returns the graph as an object of the Graph class.
+ 
+    with open(filename, "r") as file:
+        n, m = map(int, file.readline().split())
+        g = Graph(range(1, n+1))
+        for _ in range(m):
+            edge = list(map(int, file.readline().split()))
+            if len(edge) == 3:
+                node1, node2, power_min = edge
+                g.add_edge(node1, node2, power_min) # will add dist=1 by default
+            elif len(edge) == 4:
+                node1, node2, power_min, dist = edge
+                g.add_edge(node1, node2, power_min, dist)
+            else:
+                raise Exception("Format incorrect")
+    return g
 
-    The file should have the following format: 
-        The first line of the file is 'n m'
-        The next m lines have 'node1 node2 power_min dist' or 'node1 node2 power_min' (if dist is missing, it will be set to 1 by default)
-        The nodes (node1, node2) should be named 1..n
-        All values are integers.
+g = Graph([k for k in range(10)])
+g.add_edge(1,2,5)
+g.add_edge(1,3,5)
+g.add_edge(3,5,5)
+g.add_edge(2,6,15)
+g.add_edge(5,6,10)
+g.add_edge(8,9,0)
+#print(g.graph)
+#print(g.connected_components())
+#print(g.voisin_acc(2,16))
 
-    Parameters: 
-    -----------
-    filename: str
-        The name of the file
 
-    Outputs: 
-    -----------
-    G: Graph
-        An object of the class Graph with the graph from file_name.
-    """
-    raise NotImplementedError
