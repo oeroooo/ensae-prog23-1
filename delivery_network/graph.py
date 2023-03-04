@@ -28,7 +28,6 @@ class Graph:
         self.graph = dict([(n, []) for n in nodes])
         self.nb_nodes = len(nodes)
         self.nb_edges = 0
-    
 
     def __str__(self):
         """Prints the graph as a list of neighbors for each node (one per line)"""
@@ -87,7 +86,7 @@ class Graph:
 
 
         for i in self.voisin_acc(src, power) :
-            print(t)
+
             if i not in t :
                 t.append(i)
                 if i == dest:
@@ -97,18 +96,16 @@ class Graph:
                 t.pop()
         return None
         
-
     def get_path_with_power(self, src, dest, power):
         t = [src]
-        return self.get_path_with_power_bis(src,dest,power,t)
+        return self.get_path_with_power_bis(src, dest, power, t)
         
-
     def parcours_en_profondeur(self, node, seen=None):
         if seen is None:
-            seen=[]
+            seen = []
         if node not in seen:
             seen.append(node)
-            unseen=[]
+            unseen = []
             for t in self.graph[node]:
                 if t[0] not in seen:
                     unseen.append(t[0])
@@ -117,15 +114,15 @@ class Graph:
         return seen
 
     def connected_components(self):
-        ccs=[]
+        ccs = []
         for node in self.nodes:
-            if ccs==[]:        
+            if ccs == []:        
                 ccs.append(self.parcours_en_profondeur(node))
             else:
-                a=True
+                a = True
                 for cc in ccs:
                     if node in cc:
-                        a=False
+                        a = False
                 if a:
                     ccs.append(self.parcours_en_profondeur(node))
         return ccs
@@ -141,7 +138,18 @@ class Graph:
         """
         Should return path, min_power. 
         """
-        raise NotImplementedError
+        a = 0
+        b = 100
+        c = 0
+
+        while b != a:    
+            c = int((b+a)/2)
+            if self.get_path_with_power(src, dest, c) is None:
+                a = c
+            else:
+                b = c    
+        return self.get_path_with_power(src, dest, c), c
+
 
 
 def graph_from_file(filename):
@@ -160,3 +168,14 @@ def graph_from_file(filename):
             else:
                 raise Exception("Format incorrect")
     return g
+
+
+g = Graph([k for k in range(10)])
+
+g.add_edge(1, 5, 20)
+g.add_edge(1, 2, 10)
+g.add_edge(2, 5,15)
+g.add_edge(2, 3, 10)
+g.add_edge(3, 5, 10)
+
+print(g.min_power(1, 5))
