@@ -74,19 +74,34 @@ class Graph:
                 v.append(i[0])
         return v
 
-    def get_path_with_power(self, src, dest, power):
-
+    def get_path_with_power_bis(self, src, dest, power, trajet):
+        
         #On vérifie si src et dest sont dans le même composante connexe
         for i in self.connected_components():
             if src in i:
                 if dest not in i:
                     return None
 
-        trajet = []                
-
-
-        raise NotImplementedError
     
+        t = trajet
+
+
+        for i in self.voisin_acc(src, power) :
+            print(t)
+            if i not in t :
+                t.append(i)
+                if i == dest:
+                    return t 
+                else : 
+                    return self.get_path_with_power_bis(i, dest, power, t)
+                t.pop()
+        return None
+        
+
+    def get_path_with_power(self, src, dest, power):
+        t = [src]
+        return self.get_path_with_power_bis(src,dest,power,t)
+        
 
     def parcours_en_profondeur(self, node, seen=None):
         if seen is None:
@@ -145,16 +160,3 @@ def graph_from_file(filename):
             else:
                 raise Exception("Format incorrect")
     return g
-
-g = Graph([k for k in range(10)])
-g.add_edge(1,2,5)
-g.add_edge(1,3,5)
-g.add_edge(3,5,5)
-g.add_edge(2,6,15)
-g.add_edge(5,6,10)
-g.add_edge(8,9,0)
-#print(g.graph)
-#print(g.connected_components())
-#print(g.voisin_acc(2,16))
-
-
