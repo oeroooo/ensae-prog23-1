@@ -179,3 +179,5 @@ g.add_edge(2, 3, 10)
 g.add_edge(3, 5, 10)
 
 print(g.min_power(1, 5))
+
+
