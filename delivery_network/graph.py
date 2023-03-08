@@ -1,3 +1,5 @@
+
+
 class Graph:
     """
     A class representing graphs as adjacency lists and implementing various algorithms on the graphs. Graphs in the class are not oriented. 
@@ -68,38 +70,25 @@ class Graph:
     
     def voisin_acc(self, node1, power):
         v = []
-        for i in g.graph[node1]:
+        for i in self.graph[node1]:
             if i[1] <= power:
                 v.append(i[0])
         return v
 
-    def get_path_with_power_bis(self, src, dest, power, trajet):
-        
-        #On vérifie si src et dest sont dans le même composante connexe
-        for i in self.connected_components():
-            if src in i:
-                if dest not in i:
-                    return None
-
-    
-        t = trajet
-
-
-        for i in self.voisin_acc(src, power) :
-
-            if i not in t :
-                t.append(i)
-                if i == dest:
-                    return t 
-                else : 
-                    return self.get_path_with_power_bis(i, dest, power, t)
-                t.pop()
-        return None
-        
     def get_path_with_power(self, src, dest, power):
-        t = [src]
-        return self.get_path_with_power_bis(src, dest, power, t)
         
+        seen = set()
+        stack = [(src,[src])]
+
+        while stack:
+            (vertex,chemin) = stack.pop()
+            if vertex == dest:
+                return chemin
+            if vertex not in seen:
+                seen.add(vertex)
+                for voisin in self.voisin_acc(vertex,power):
+                    stack.append((voisin, chemin + [voisin]))
+        return None
     def parcours_en_profondeur(self, node, seen=None):
         if seen is None:
             seen = []
@@ -142,14 +131,15 @@ class Graph:
         b = 100
         c = 0
 
-        while b != a:    
-            c = int((b+a)/2)
-            if self.get_path_with_power(src, dest, c) is None:
-                a = c
-            else:
-                b = c    
-        return self.get_path_with_power(src, dest, c), c
+        while b > a:    
+            c = (b + a) //2
 
+            print(self.get_path_with_power(src, dest, c))
+            if self.get_path_with_power(src, dest, c) is None:
+                a = c + 1
+            else:
+                b = c   
+        return self.get_path_with_power(src, dest, b), b
 
 
 def graph_from_file(filename):
@@ -174,10 +164,48 @@ g = Graph([k for k in range(10)])
 
 g.add_edge(1, 5, 20)
 g.add_edge(1, 2, 10)
-g.add_edge(2, 5,15)
+g.add_edge(2, 5, 15)
 g.add_edge(2, 3, 10)
 g.add_edge(3, 5, 10)
 
-print(g.min_power(1, 5))
+#print(g.min_power(1, 5))
 
 
+h = graph_from_file("input/network.00.in")
+#print(h)
+#print(h.get_path_with_power(1, 9, 50))
+#print(h.min_power(1, 9))
+
+
+
+
+
+
+
+
+"""    
+    def get_path_with_power(self, src, dest, power):   
+        #On vérifie si src et dest sont dans le même composante connexe
+        for i in self.connected_components():
+            if src in i:
+                if dest not in i:
+                    return None
+
+        t = trajet
+        print(t)
+
+        for i in self.voisin_acc(src, power) :
+
+            if i not in t :
+                t.append(i)
+                if i == dest:
+                    return t 
+                else : 
+                    return self.get_path_with_power_bis(i, dest, power, t)
+                t.pop()
+        return None
+      
+    def get_path_with_power(self, src, dest, power):
+        t = [src]
+        return self.get_path_with_power_bis(src, dest, power, t)
+"""
