@@ -90,7 +90,6 @@ class Graph:
                     stack.append((voisin, chemin + [voisin]))
         return None
 
-
     def parcours_en_profondeur(self, node, seen=None):
         if seen is None:
             seen = []
@@ -123,8 +122,7 @@ class Graph:
         The result should be a set of frozensets (one per component), 
         For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
         """
-        return set(map(frozenset, self.connected_components()))
-    
+        return set(map(frozenset, self.connected_components())) 
     def min_power(self, src, dest):
         """
         Should return path, min_power. 
@@ -143,13 +141,11 @@ class Graph:
             else:
                 b = c   
         return self.get_path_with_power(src, dest, b), b
-
-    
+  
     def find(self,parent,x):
         if parent[x] == x:
             return x
-        return self.find(parent,parent[x])
-    
+        return self.find(parent,parent[x])  
     def union(self,parent,rang,x,y):
         xracine = self.find(parent,x)
         yracine = self.find(parent,y)
@@ -161,11 +157,13 @@ class Graph:
             parent[yracine] = xracine
             rang[xracine] += 1
 
-    def kruksal(self):
+    def kruskal(self):
 
         parent = []
         rang = []
         resultat = []
+
+        g_mst = Graph()
 
         liste_arete = []
         seen = []
@@ -173,32 +171,37 @@ class Graph:
             for j in self.graph[i]:
                 a = j[0]
                 b = j[1]
-                if {i,a} or {a,i} not in seen:
-                    seen.append({i,a})
-                    liste_arete.append([i,a,b])
 
+                if [i, a] and [a, i] not in seen:
+                    seen.append([i, a])
 
-        liste_croissante_arete = sorted(liste_arete, key = lambda x : x[2])
+                    liste_arete.append([i, a, b])
 
+        liste_croissante_arete = sorted(liste_arete, key=lambda x: x[2])
 
+        print(liste_croissante_arete)
         V = self.nb_nodes
 
-        for n in range(V):
+        for n in range(V+1):
             parent.append(n)
             rang.append(0)
 
         for i in liste_croissante_arete:
             if len(resultat) == V - 1:
-                return resultat
+                return g_mst
             x = self.find(parent, i[0])
             y = self.find(parent, i[1])
             if x != y:
-                resultat.append([i])
-                self.union(parent, rang, x, y)
-        
+                resultat.append(i)
+                g_mst.add_edge(i[0], i[1], i[2])
+                self.union(parent, rang, x, y)      
+
+    def min_power_mst(self, src, dest):
+        arbre = self.kruskal()
+        return arbre.min_power(src, dest)
+
 
 def graph_from_file(filename):
- 
     with open(filename, "r") as file:
         n, m = map(int, file.readline().split())
         g = Graph(range(1, n+1))
@@ -215,24 +218,33 @@ def graph_from_file(filename):
     return g
 
 
-g = Graph([k for k in range(10)])
+g = Graph([k for k in range(5)])
 
-g.add_edge(1, 5, 20)
+g.add_edge(0, 1, 10)
 g.add_edge(1, 2, 10)
-g.add_edge(2, 5, 15)
-g.add_edge(2, 3, 10)
-g.add_edge(3, 5, 10)
+g.add_edge(1, 3, 15)
+g.add_edge(2, 4, 10)
+g.add_edge(3, 4, 10)
+
+#print(g)
+print(g.graph)
+#print(g.kruskal())
+
 
 #print(g.min_power(1, 5))
 
 
+"""
 h = graph_from_file("input/network.00.in")
 #print(h.graph)
 #print(h.kruksal())
-# print(h.get_path_with_power(1, 9, 50))
-# print(g.min_power(1, 5))
 
 
+ 
+#print(h.get_path_with_power(1, 9, 50))
+print(h.min_power(1, 5))
+print(h.min_power_mst(1, 5))
+"""
 
 
 

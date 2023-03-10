@@ -8,10 +8,12 @@ file_name = "network.01.in"
 #print(g)
 
 
-h = graph_from_file("input/network.00.in")
+h = graph_from_file("input/network.2.in")
+
+
 
 debut = time.perf_counter()
-print(h.min_power(1, 9))
+print(h.min_power(1220, 46952))
 fin = time.perf_counter()
 
 print(fin-debut)
