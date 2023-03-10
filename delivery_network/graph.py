@@ -146,6 +146,7 @@ class Graph:
         if parent[x] == x:
             return x
         return self.find(parent,parent[x])  
+
     def union(self,parent,rang,x,y):
         xracine = self.find(parent,x)
         yracine = self.find(parent,y)
@@ -164,11 +165,13 @@ class Graph:
         resultat = []
 
         g_mst = Graph()
-
+        test = 0
         liste_arete = []
         seen = []
         for i in self.nodes:
             for j in self.graph[i]:
+                test = test+1
+                print(test)
                 a = j[0]
                 b = j[1]
 
@@ -179,7 +182,6 @@ class Graph:
 
         liste_croissante_arete = sorted(liste_arete, key=lambda x: x[2])
 
-        print(liste_croissante_arete)
         V = self.nb_nodes
 
         for n in range(V+1):
@@ -194,7 +196,12 @@ class Graph:
             if x != y:
                 resultat.append(i)
                 g_mst.add_edge(i[0], i[1], i[2])
-                self.union(parent, rang, x, y)      
+                self.union(parent, rang, x, y)   
+            print(resultat[-1]) 
+
+        return g_mst
+
+
 
     def min_power_mst(self, src, dest):
         arbre = self.kruskal()
@@ -217,7 +224,7 @@ def graph_from_file(filename):
                 raise Exception("Format incorrect")
     return g
 
-
+"""
 g = Graph([k for k in range(5)])
 
 g.add_edge(0, 1, 10)
@@ -227,24 +234,27 @@ g.add_edge(2, 4, 10)
 g.add_edge(3, 4, 10)
 
 #print(g)
-print(g.graph)
+#print(g.graph)
 #print(g.kruskal())
 
 
-#print(g.min_power(1, 5))
-
+print(g.min_power(1, 4))
+print(g.min_power_mst(1, 4))
+"""
 
 """
 h = graph_from_file("input/network.00.in")
-#print(h.graph)
-#print(h.kruksal())
+print(h.graph)
+print(h.kruskal())
 
 
  
-#print(h.get_path_with_power(1, 9, 50))
+print(h.get_path_with_power(1, 9, 50))
 print(h.min_power(1, 5))
 print(h.min_power_mst(1, 5))
+
 """
+
 
 
 
