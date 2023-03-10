@@ -78,15 +78,15 @@ class Graph:
     def get_path_with_power(self, src, dest, power):
         
         seen = set()
-        stack = [(src,[src])]
+        stack = [(src, [src])]
 
         while stack:
-            (vertex,chemin) = stack.pop()
-            if vertex == dest:
+            (node, chemin) = stack.pop()
+            if node == dest:
                 return chemin
-            if vertex not in seen:
-                seen.add(vertex)
-                for voisin in self.voisin_acc(vertex,power):
+            if node not in seen:
+                seen.add(node)
+                for voisin in self.voisin_acc(node, power):
                     stack.append((voisin, chemin + [voisin]))
         return None
 
@@ -129,18 +129,14 @@ class Graph:
         """
         Should return path, min_power. 
         """
-        t = 2
+        t = 1
         while self.get_path_with_power(src, dest, t) is None:
-            t = t*2
-        
+            t = t*2     
         a = t // 2
         b = t
         c = 0
-
-
         while b > a:    
             c = (b + a) //2
-
 
             if self.get_path_with_power(src, dest, c) is None:
                 a = c + 1
@@ -231,8 +227,8 @@ g.add_edge(3, 5, 10)
 
 
 h = graph_from_file("input/network.00.in")
-print(h.graph)
-print(h.kruksal())
+#print(h.graph)
+#print(h.kruksal())
 # print(h.get_path_with_power(1, 9, 50))
 # print(g.min_power(1, 5))
 

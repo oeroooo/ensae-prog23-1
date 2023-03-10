@@ -16,7 +16,3 @@ fin = time.perf_counter()
 
 print(fin-debut)
 
-
-
-
-def kruksal(gph):
