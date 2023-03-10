@@ -89,6 +89,8 @@ class Graph:
                 for voisin in self.voisin_acc(vertex,power):
                     stack.append((voisin, chemin + [voisin]))
         return None
+
+
     def parcours_en_profondeur(self, node, seen=None):
         if seen is None:
             seen = []
@@ -127,20 +129,77 @@ class Graph:
         """
         Should return path, min_power. 
         """
-        a = 0
-        b = 100
+        t = 2
+        while self.get_path_with_power(src, dest, t) is None:
+            t = t*2
+        
+        a = t // 2
+        b = t
         c = 0
+
 
         while b > a:    
             c = (b + a) //2
 
-            print(self.get_path_with_power(src, dest, c))
+
             if self.get_path_with_power(src, dest, c) is None:
                 a = c + 1
             else:
                 b = c   
         return self.get_path_with_power(src, dest, b), b
 
+    
+    def find(self,parent,x):
+        if parent[x] == x:
+            return x
+        return self.find(parent,parent[x])
+    
+    def union(self,parent,rang,x,y):
+        xracine = self.find(parent,x)
+        yracine = self.find(parent,y)
+        if rang[xracine] < rang[yracine]:
+            parent[xracine] = yracine
+        elif rang[xracine] > rang[yracine]:
+            parent[yracine] = xracine
+        else:
+            parent[yracine] = xracine
+            rang[xracine] += 1
+
+    def kruksal(self):
+
+        parent = []
+        rang = []
+        resultat = []
+
+        liste_arete = []
+        seen = []
+        for i in self.nodes:
+            for j in self.graph[i]:
+                a = j[0]
+                b = j[1]
+                if {i,a} or {a,i} not in seen:
+                    seen.append({i,a})
+                    liste_arete.append([i,a,b])
+
+
+        liste_croissante_arete = sorted(liste_arete, key = lambda x : x[2])
+
+
+        V = self.nb_nodes
+
+        for n in range(V):
+            parent.append(n)
+            rang.append(0)
+
+        for i in liste_croissante_arete:
+            if len(resultat) == V - 1:
+                return resultat
+            x = self.find(parent, i[0])
+            y = self.find(parent, i[1])
+            if x != y:
+                resultat.append([i])
+                self.union(parent, rang, x, y)
+        
 
 def graph_from_file(filename):
  
@@ -172,9 +231,10 @@ g.add_edge(3, 5, 10)
 
 
 h = graph_from_file("input/network.00.in")
-#print(h)
-#print(h.get_path_with_power(1, 9, 50))
-#print(h.min_power(1, 9))
+print(h.graph)
+print(h.kruksal())
+# print(h.get_path_with_power(1, 9, 50))
+# print(g.min_power(1, 5))
 
 
 
