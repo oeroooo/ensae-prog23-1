@@ -30,6 +30,7 @@ class Graph:
         self.graph = dict([(n, []) for n in nodes])
         self.nb_nodes = len(nodes)
         self.nb_edges = 0
+        self.edges = []
 
     def __str__(self):
         """Prints the graph as a list of neighbors for each node (one per line)"""
@@ -67,6 +68,7 @@ class Graph:
         self.graph[node1].append((node2, power_min, dist))
         self.graph[node2].append((node1, power_min, dist))
         self.nb_edges += 1
+        self.edges.append([node1, node2, power_min, dist])
     
     def voisin_acc(self, node1, power):
         v = []
@@ -123,6 +125,7 @@ class Graph:
         For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
         """
         return set(map(frozenset, self.connected_components())) 
+
     def min_power(self, src, dest):
         """
         Should return path, min_power. 
@@ -133,8 +136,8 @@ class Graph:
         a = t // 2
         b = t
         c = 0
-        while b > a:    
-            c = (b + a) //2
+        while b > a:     
+            c = (b + a) // 2
 
             if self.get_path_with_power(src, dest, c) is None:
                 a = c + 1
@@ -142,14 +145,14 @@ class Graph:
                 b = c   
         return self.get_path_with_power(src, dest, b), b
   
-    def find(self,parent,x):
+    def find(self, parent, x):
         if parent[x] == x:
             return x
-        return self.find(parent,parent[x])  
+        return self.find(parent, parent[x])  
 
-    def union(self,parent,rang,x,y):
-        xracine = self.find(parent,x)
-        yracine = self.find(parent,y)
+    def union(self, parent, rang, x, y):
+        xracine = self.find(parent, x)
+        yracine = self.find(parent, y)
         if rang[xracine] < rang[yracine]:
             parent[xracine] = yracine
         elif rang[xracine] > rang[yracine]:
@@ -165,6 +168,8 @@ class Graph:
         resultat = []
 
         g_mst = Graph()
+
+        """
         test = 0
         liste_arete = []
         seen = []
@@ -179,8 +184,12 @@ class Graph:
                     seen.append([i, a])
 
                     liste_arete.append([i, a, b])
+"""
 
+        liste_arete = self.edges
+        print("ok1")
         liste_croissante_arete = sorted(liste_arete, key=lambda x: x[2])
+        print("ok2")
 
         V = self.nb_nodes
 
@@ -197,11 +206,8 @@ class Graph:
                 resultat.append(i)
                 g_mst.add_edge(i[0], i[1], i[2])
                 self.union(parent, rang, x, y)   
-            print(resultat[-1]) 
 
         return g_mst
-
-
 
     def min_power_mst(self, src, dest):
         arbre = self.kruskal()
@@ -216,7 +222,7 @@ def graph_from_file(filename):
             edge = list(map(int, file.readline().split()))
             if len(edge) == 3:
                 node1, node2, power_min = edge
-                g.add_edge(node1, node2, power_min) # will add dist=1 by default
+                g.add_edge(node1, node2, power_min)  # will add dist=1 by default
             elif len(edge) == 4:
                 node1, node2, power_min, dist = edge
                 g.add_edge(node1, node2, power_min, dist)
@@ -224,7 +230,8 @@ def graph_from_file(filename):
                 raise Exception("Format incorrect")
     return g
 
-"""
+
+
 g = Graph([k for k in range(5)])
 
 g.add_edge(0, 1, 10)
@@ -235,33 +242,29 @@ g.add_edge(3, 4, 10)
 
 #print(g)
 #print(g.graph)
+#print(g.edges)
 #print(g.kruskal())
 
 
-print(g.min_power(1, 4))
-print(g.min_power_mst(1, 4))
-"""
+#print(g.min_power(1, 4))
+#print(g.min_power_mst(1, 4))
+
 
 """
 h = graph_from_file("input/network.00.in")
 print(h.graph)
+print(h.edges)
 print(h.kruskal())
+"""
+
+#print(h.get_path_with_power(1, 9, 50))
+#print(h.min_power(1, 5))
+#print(h.min_power_mst(1, 5))
 
 
- 
-print(h.get_path_with_power(1, 9, 50))
-print(h.min_power(1, 5))
-print(h.min_power_mst(1, 5))
 
 """
 
-
-
-
-
-
-
-"""    
     def get_path_with_power(self, src, dest, power):   
         #On vérifie si src et dest sont dans le même composante connexe
         for i in self.connected_components():
