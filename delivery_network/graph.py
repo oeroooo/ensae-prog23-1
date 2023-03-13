@@ -211,9 +211,34 @@ class Graph:
 
         return g_mst
 
+    def get_path_mst(self, src, dest):
+
+        """
+        Dans un arbre couvrant minimal le chemin entre deux sommets
+        est toujours unique. Nous n'avons donc plus besoin d'effectuer
+        les vérifications de power, ce qui améliore grandement
+        la complexité de l'algorithme
+        """       
+        seen = []
+        stack = [(src, [src], [])]
+        while stack:
+            (node, chemin, power) = stack.pop()
+            if node == dest:
+                return chemin, power
+            if node not in seen:
+                seen.append(node)
+                for voisin in self.graph[node]:
+                    a = (voisin[0], chemin + [voisin[0]], power + [voisin[1]])
+                    stack.append(a)
+        return None
+
     def min_power_mst(self, src, dest):
-        arbre = self.kruskal()
-        return arbre.min_power(src, dest)
+        """
+        On supposer que min_power_mst est utilisé uniquement
+        pour des arbres couvrant minimaux
+        """
+        chemin, power = self.get_path_mst(src, dest) 
+        return max(power)
 
 
 def graph_from_file(filename):
@@ -246,6 +271,13 @@ g.add_edge(3, 4, 10)
 #print(g.graph)
 #print(g.edges)
 #print(g.kruskal())
+
+#print(g.get_path_with_power(1, 4, 10))
+#print(g.min_power(1, 4))
+#b = g.kruskal()
+#print(b.get_path_with_power(1, 4, 10))
+#print(b.get_path_mst(1, 4))
+#print(b.min_power_mst(1, 4))
 
 
 #print(g.min_power(1, 4))

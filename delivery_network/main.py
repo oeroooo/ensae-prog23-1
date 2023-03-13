@@ -7,6 +7,9 @@ A faire
 -Refaire get_path_with_power
 -distance
 -Nettoyer code
+-Rendre accessible à tous le github
+-Fichier test
+-Fichier réponse aux questions
 
 
 
@@ -24,9 +27,10 @@ file_name = "network.2.in"
 #print(g)
 
 
-#h = graph_from_file("input/network.2.in")
+#h = graph_from_file("input/network.5.in")
 
-#print(h.min_power_mst(37816,77493))
+
+
 
 
 def temps_routes(filename, filename2):
@@ -40,12 +44,12 @@ def temps_routes(filename, filename2):
     h_mst = h.kruskal()
     for line in linesp:
         print(line)
-        words= line.split()
+        words = line.split()
         h.min_power(int(words[0]), int(words[1]))
     fin = time.perf_counter()
     return ((fin-debut)*max(n/10,1))
     
-print(temps_routes("input/routes.2.in","input/network.2.in"))  
+#print(temps_routes("input/routes.3.in","input/network.3.in"))  
 
 """
 def temps_routes(filename, filename2):
