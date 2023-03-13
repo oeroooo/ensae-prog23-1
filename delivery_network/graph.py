@@ -170,13 +170,15 @@ class Graph:
         g_mst = Graph()
 
         """
-        test = 0
+        On pouvait utiliser cette méthode pour récupérer la liste de toutes les arêtes
+        et ensuite les trier. Mais il apparaissait plus rapide de conserver les arêtes dans une liste
+        créer au moment de la création du graph. 
+
         liste_arete = []
         seen = []
         for i in self.nodes:
             for j in self.graph[i]:
-                test = test+1
-                print(test)
+
                 a = j[0]
                 b = j[1]
 
@@ -184,7 +186,7 @@ class Graph:
                     seen.append([i, a])
 
                     liste_arete.append([i, a, b])
-"""
+        """
 
         liste_arete = self.edges
         print("ok1")
