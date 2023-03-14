@@ -49,7 +49,7 @@ def temps_routes(filename, filename2):
     fin = time.perf_counter()
     return ((fin-debut)*max(n/10,1))
     
-#print(temps_routes("input/routes.3.in","input/network.3.in"))  
+print(temps_routes("input/routes.2.in","input/network.2.in"))  
 
 """
 def temps_routes(filename, filename2):

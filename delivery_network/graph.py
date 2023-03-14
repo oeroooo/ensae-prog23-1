@@ -244,6 +244,28 @@ class Graph:
         a = self.graph
         return rang.index(max(rang[i[0]] for i in a[src]))  
 
+    
+    def find_parents_auxiliaires(self,start):
+        arbre = self.graph
+        for neighbor, power, distance in arbre[start]:
+            if not deja_vu[neighbor]:
+                deja_vu[neighbor] = True
+                parents[neighbor] = [start, power]
+                profondeur[neighbor] = profondeur[start]
+                self.find_parents_auxiliaires(neighbor)
+
+    def find_parents(self,start):
+        parents = {}
+        profondeur = dict([(sommet,0) for sommet in self.nodes])
+        deja_vu = dict([(sommet,False) for sommet in self.nodes])
+        arbre = self.graph
+
+        self.find_parents_auxiliaires(start)
+
+        return profondeurs, parents
+
+
+
 def graph_from_file(filename):
     with open(filename, "r") as file:
         n, m = map(int, file.readline().split())
@@ -270,6 +292,8 @@ g.add_edge(1, 3, 15)
 g.add_edge(2, 4, 10)
 g.add_edge(3, 4, 10)
 
+print(g.find_parents(3))
+
 #print(g)
 #print(g.graph)
 #print(g.edges)
@@ -288,12 +312,12 @@ g.add_edge(3, 4, 10)
 #print(g.min_power_mst(1, 4))
 
 
-
+"""
 h = graph_from_file("input/network.00.in")
 print(h.graph)
 a, b = h.kruskal()
 print(h.root(b, 7))
-
+"""
 
 
 #print(h.get_path_with_power(1, 9, 50))
