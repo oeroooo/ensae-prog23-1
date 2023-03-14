@@ -201,7 +201,7 @@ class Graph:
 
         for i in liste_croissante_arete:
             if len(resultat) == V - 1:
-                return g_mst
+                return g_mst, rang
             x = self.find(parent, i[0])
             y = self.find(parent, i[1])
             if x != y:
@@ -209,7 +209,7 @@ class Graph:
                 g_mst.add_edge(i[0], i[1], i[2])
                 self.union(parent, rang, x, y)   
 
-        return g_mst
+        return g_mst, rang
 
     def get_path_mst(self, src, dest):
 
@@ -240,6 +240,9 @@ class Graph:
         chemin, power = self.get_path_mst(src, dest) 
         return max(power)
 
+    def root(self, rang, src):
+        a = self.graph
+        return rang.index(max(rang[i[0]] for i in a[src]))  
 
 def graph_from_file(filename):
     with open(filename, "r") as file:
@@ -270,7 +273,8 @@ g.add_edge(3, 4, 10)
 #print(g)
 #print(g.graph)
 #print(g.edges)
-#print(g.kruskal())
+#a, b = g.kruskal()
+#print(b)
 
 #print(g.get_path_with_power(1, 4, 10))
 #print(g.min_power(1, 4))
@@ -284,12 +288,13 @@ g.add_edge(3, 4, 10)
 #print(g.min_power_mst(1, 4))
 
 
-"""
+
 h = graph_from_file("input/network.00.in")
 print(h.graph)
-print(h.edges)
-print(h.kruskal())
-"""
+a, b = h.kruskal()
+print(h.root(b, 7))
+
+
 
 #print(h.get_path_with_power(1, 9, 50))
 #print(h.min_power(1, 5))
