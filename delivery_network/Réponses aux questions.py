@@ -257,6 +257,8 @@ from main import temps_routes_opti
     remonter l'arbre (qui est maintenant orienté en quelque sorte)
     vers le parent jusqu'à trouver l'ancêtre commun.
     Ainsi, on ne visite plus les branches inutiles !
+    
+    On crée ainsi la fonction min_power opti dans le fichier graph
 
 """
 
