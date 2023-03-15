@@ -86,7 +86,8 @@ class Graph:
 
         Résultats :
         -----------
-        Liste de tous les voisins accessibles
+        v : list
+            Liste de tous les voisins accessibles
         """
         v = []
         for i in self.graph[node1]:
@@ -121,8 +122,10 @@ class Graph:
 
         Résultats :
         -----------
-        liste de tous les sommets qui constitue parcourus pour aller
-        de la source à la destination
+        chemin : list
+        None : Nonetype
+            liste de tous les sommets qui constitue parcourus pour aller
+            de la source à la destination. None s'il n'existe pas de chemin
         """
         
         seen = []
@@ -163,8 +166,9 @@ class Graph:
 
         Résultats :
         -----------
-        Liste de tous les sommets parcourus (qui sont donc les sommets
-        réliés par un chemin existant au sommet initial)
+        seen: list
+            Liste de tous les sommets parcourus (qui sont donc les sommets
+            réliés par un chemin existant au sommet initial)
         """
 
         if seen is None:
@@ -195,7 +199,8 @@ class Graph:
 
         Résultats :
         -----------
-        Liste de listes (chacune des listes représente une composante connexe)
+        connected : list
+            Liste de listes (chacune des listes représente une composante connexe)
 
         """
         connected = []
@@ -220,23 +225,52 @@ class Graph:
         return set(map(frozenset, self.connected_components())) 
 
     def min_power(self, src, dest):
+
         """
-        Should return path, min_power. 
+        Cette fonction donne le power minimum nécessaire pour aller
+        d'un sommet à un autre. Il peut exister plusieurs chemins
+        pour aller d'un sommet A à un sommet B. On regarde
+        pour tous ces chemins et on prend celui telle que la puissance
+        maximale rencontrée sur l'ensenble du chemin soit minimale.
+        On procédera par dichotomie
+
+        Paramètres: 
+        -----------
+        src : Nodetype
+            Sommet de départ
+        
+        dest : Nodetype
+            Sommet d'arrivée
+
+        Résultats :
+        -----------
+        chemin : list
+            Liste de tous les chemins parcourus pour aller
+            de src à dest de telle sorte que la puissance maximale
+            rencontrée soit minimale
+        puissance : int
+            puissance maximale rencontrée sur le chemin optimale
+
         """
         t = 1
+        # On cherche les bornes initiales par dichotomie
         while self.get_path_with_power(src, dest, t) is None:
             t = t*2     
         a = t // 2
         b = t
         c = 0
+
+        # On cherche par dichotomie la puissance
         while b > a:     
             c = (b + a) // 2
 
             if self.get_path_with_power(src, dest, c) is None:
                 a = c + 1
             else:
-                b = c   
-        return self.get_path_with_power(src, dest, b), b
+                b = c
+        chemin = self.get_path_with_power(src, dest, b)
+        puissance = b
+        return chemin, puissance
   
     def find(self, parent, x):
         if parent[x] == x:

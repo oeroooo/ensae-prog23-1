@@ -58,17 +58,17 @@ def temps_routes_opti(filename, filename2):
     n= len(lines)
     h= graph_from_file(filename2)
     linesp=lines[1:min(n, 10)+1]
-    h.kruskal()
-    profondeurs, parents = h.find_parents(1)
+    b = h.kruskal()
+    profondeurs, parents = b.find_parents(1)
     debut = time.perf_counter()
     for line in linesp:
         print(line)
         words = line.split()
-        h.get_path_opti(int(words[0]), int(words[1]), profondeurs, parents)
+        b.get_path_opti(int(words[0]), int(words[1]), profondeurs, parents)
     fin = time.perf_counter()
     return ((fin-debut)*max(n/10,1))
     
-#print(temps_routes_opti("input/routes.2.in","input/network.2.in"))  
+#print(temps_routes_opti("input/routes.9.in","input/network.9.in"))  
 
 """
 def temps_routes(filename, filename2):
