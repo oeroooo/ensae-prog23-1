@@ -71,6 +71,23 @@ class Graph:
         self.edges.append([node1, node2, power_min, dist])
     
     def voisin_acc(self, node1, power):
+
+        """
+        Cette fonction donne tous les voisins d'un sommet accessible, c'est-à-dire
+        qu'il existe une arete reliant ce sommet à son voisin dont la puissance
+        est inférieure à la puissance indiquée.
+        
+        Paramètres: 
+        -----------
+        node1: NodeType
+            Sommet dont on cherche les voisins
+        power: int
+            Puissance maximale qu'on accepte
+
+        Résultats :
+        -----------
+        Liste de tous les voisins accessibles
+        """
         v = []
         for i in self.graph[node1]:
             if i[1] <= power:
@@ -78,18 +95,52 @@ class Graph:
         return v
 
     def get_path_with_power(self, src, dest, power):
+
+        """
+        Cette fonction donne le chemin entre deux sommets du graph.
+        Si les deux sommets sont dans la même composante connexe, alors on
+        parcourt avec une file le graph pour chercher la destination
+        tout en enregistrant le parcours effectué.
+
+
+        Si les deux sommets ne sont pas dans la même composante connexe, alors 
+        on renvoit None (car il n'existe alors pas de chemin). On pourrait 
+        vérifier dès le début que les deux points sont dans la même composante
+        connexe pour éviter de parcourir le graph pour rien. Mais par la suite,
+        on utilisera presque uniquement des graphes connexes, donc on évitera
+        de faire à chaque fois le calcul couteux des composantes connexes
         
-        seen = set()
+        Paramètres: 
+        -----------
+        src: NodeType
+            Sommet de départ
+        dest: NodeType
+            Sommet d'arrivée
+        power: int
+            Puissance maximale qu'on accepte sur l'ensemble du chemin
+
+        Résultats :
+        -----------
+        liste de tous les sommets qui constitue parcourus pour aller
+        de la source à la destination
+        """
+        
+        seen = []
+        #On construit la file
         stack = [(src, [src])]
 
         while stack:
             (node, chemin) = stack.pop()
             if node == dest:
+                #On est arrivé, on peut arrêter l'algorithme ici
                 return chemin
             if node not in seen:
-                seen.add(node)
+                seen.append(node)
+                #On récupère les voisins accessibles
                 for voisin in self.voisin_acc(node, power):
                     stack.append((voisin, chemin + [voisin]))
+
+        #La destination n'a pas été trouvé
         return None
 
     def parcours_en_profondeur(self, node, seen=None):
@@ -147,19 +198,19 @@ class Graph:
         Liste de listes (chacune des listes représente une composante connexe)
 
         """
-        ccs = []
+        connected = []
 
         for node in self.nodes:
-            if ccs == []:        
-                ccs.append(self.parcours_en_profondeur(node))
+            if connected == []:        
+                connected.append(self.parcours_en_profondeur(node))
             else:
                 a = True
-                for cc in ccs:
+                for cc in connected:
                     if node in cc:
                         a = False
                 if a:
-                    ccs.append(self.parcours_en_profondeur(node))
-        return ccs
+                    connected.append(self.parcours_en_profondeur(node))
+        return connected
 
     def connected_components_set(self):
         """
@@ -374,53 +425,4 @@ def graph_from_file(filename):
     return g
 
 
-
-g = Graph([k for k in range(5)])
-
-g.add_edge(0, 1, 10)
-g.add_edge(1, 2, 10)
-g.add_edge(1, 3, 15)
-g.add_edge(1, 5, 15)
-g.add_edge(5, 6, 15)
-g.add_edge(2, 4, 10)
-g.add_edge(3, 4, 10)
-
-g2 = g.kruskal()
-
-
-a , b = g2.find_parents(1)
-
-#print(g2.get_path_opti(3, 6, a, b))
-
-#print(g)
-#print(g.graph)
-#print(g.edges)
-#a, b = g.kruskal()
-#print(b)
-
-#print(g.get_path_with_power(1, 4, 10))
-#print(g.min_power(1, 4))
-#b = g.kruskal()
-#print(b.get_path_with_power(1, 4, 10))
-#print(b.get_path_mst(1, 4))
-#print(b.min_power_mst(1, 4))
-
-
-#print(g.min_power(1, 4))
-#print(g.min_power_mst(1, 4))
-
-
-"""
-h = graph_from_file("input/network.2.in")
-h.kruskal()
-profondeurs, parents = h.find_parents(1)
-print(h.get_path_opti(4, 5, profondeurs, parents))
-"""
-
-
-
-
-#print(h.get_path_with_power(1, 9, 50))
-#print(h.min_power(1, 5))
-#print(h.min_power_mst(1, 5))
 

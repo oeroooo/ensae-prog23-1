@@ -11,6 +11,7 @@
 """
 
 """
+-------------------------
     Question 1
     On implémente add_edge et  graph_from_file dans le fichier graph
     On a réutilisé les fonctions données par l'enseignant
@@ -19,6 +20,7 @@
 """
 
 """
+-------------------------
     Question 2
 
     On répond en deux temps. Dans un premier on crée dans la classe graph la 
@@ -34,6 +36,7 @@
 """
 
 """
+-------------------------
     Question 3
 
     XX
@@ -41,11 +44,54 @@
 """
 
 """
+-------------------------
     Question 4
 
     Le code modifié est dans la fonction graph_from_file dans le fichier graph
-    On teste ci-dessous l'ouverture de network04
+    On teste ci-dessous l'ouverture de network04. Cela fonctionne.
+
+    LE FAIRE EN FAIT DANS S1Q4
 
 """
 from graph import Graph, graph_from_file
 graph_from_file("input/network.04.in")
+
+"""
+-------------------------
+    Question 5
+
+    XX
+
+"""
+
+"""
+-------------------------
+    Question 6
+
+    Complexité :XX
+
+"""
+
+"""
+-------------------------
+    Question 7
+
+    Non traité
+
+"""
+
+"""
+-------------------------
+    Question 8
+
+    XX
+
+"""
+
+"""
+-------------------------
+    Question 9
+
+    Non traité
+
+"""
