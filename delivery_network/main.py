@@ -52,7 +52,7 @@ def temps_routes_opti(filename, filename2):
     fin = time.perf_counter()
     return ((fin-debut)*max(n/10, 1))
     
-#print(temps_routes_opti("input/routes.9.in","input/network.9.in"))  
+print(temps_routes_opti("input/routes.9.in","input/network.9.in"))  
 
 
 """

@@ -608,7 +608,7 @@ class Graph:
         on a l'ancêtre commun et les chemins :
         - src -> ancêtre commun
         - dest -> ancêtre commun
-        On concatène les listes, ce qui est un peu long
+        On concatène les listes, ce qui est un peu laborieux
         """
         if len(pathsrc) != 1 and len(pathdest) != 1:
             pathdest.reverse()
