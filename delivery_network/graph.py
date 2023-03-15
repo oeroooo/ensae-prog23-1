@@ -631,6 +631,67 @@ class Graph:
 
         return pathfinal, max(powerfinal)
 
+    """
+    Ci-dessous l'algorithme de Dijkstra
+    """
+
+    def find_min_Dijkstra(self, Q, d):
+        mini = float('inf')
+        node = -1
+        for s in Q:
+            if d[s] < mini:
+                mini = d[s]
+                node = s
+        return node
+
+    def dist_Dijkstra(self, node1, node2, power):
+        d = 0
+        a = True
+        for i in self.graph[node1]:
+            if node2 == i[0] and i[1] <= power:
+                d = i[2]
+                a = False
+        if a:
+            d = float('inf')
+        return d
+
+    def maj_dist_Dijkstra(self, node1, node2, d, power, ancestor):
+        P = self.dist_Dijkstra(node1, node2, power)
+        if d[node2] > d[node1]+P:
+            d[node2] = d[node1]+P
+            ancestor[node2] = node1
+        return (d, ancestor)
+
+    def Dijkstra(self, src, dest, power, ancestor=None):
+        assert src in self.parcours_en_profondeur(dest)
+        d = {}
+        for node in self.nodes:
+            d[node] = float('inf')
+        d[src] = 0
+        if ancestor is None:
+            ancestor = {}
+        Q = self.parcours_en_profondeur(src)
+        while Q != []:
+            node1 = self.find_min_Dijkstra(Q, d)
+            if node1 == dest:
+                path = []
+                node = dest
+                while node != src:
+                    path = [node]+path
+                    node = ancestor[node]
+                return [src]+path
+            if node1 != -1:
+                Q.remove(node1)
+            else:
+                break
+            for a in self.graph[node1]:
+                d, ancestor = self.maj_dist_Dijkstra(node1, a[0], d, power, ancestor)
+        return None
+
+    """
+    Fin l'algorithme de Dijkstra
+    """
+
 
 def graph_from_file(filename):
     with open(filename, "r") as file:
@@ -647,5 +708,3 @@ def graph_from_file(filename):
             else:
                 raise Exception("Format incorrect")
     return g
-
-

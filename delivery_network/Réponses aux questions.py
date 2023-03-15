@@ -87,7 +87,14 @@ from main import temps_routes_opti
 -------------------------
     Question 5
 
-    XX
+    On implémente l'algorithme de dijkstra
+
+    Cet algorithme ayant été rajouté tardivement, nous ne l'avons
+    pas encore commenté. Il consiste en 4 fonctions.
+    Elles se trouve tout à la fin de la class graph sur le fichier graph
+    (Des commentaires indiquent le début et la fin)
+
+    Nous avons créé un test (Test dijkstra) que nous passons avec succès
 
 """
 
@@ -207,6 +214,17 @@ from main import temps_routes_opti
     Avec cette méthode on peut vérifier pour des graph très grands comme
     network 3 !
 
+    A propos de la complexité :
+
+    La boucle sur toute les aretes est uniquement de complexité  o(V-1)
+    avec V le nombre de noeuds. En effet on s'arretera dès qu'on aura
+    fait V-1 itérations. Ce temps est liénaire
+
+    Par contre le tri de la liste des aretes au début est de complexité
+    o(Elog(E)) avec E le nombre d'arêtes dans le graph initial.
+    et E >= V
+    Donc la complexité totale de l'algorithme est bien o(Elog(E))
+
 """
 
 """
@@ -250,15 +268,15 @@ from main import temps_routes_opti
     On implémente dans le fichier main une mesure du temps pour la
     fonction min_power_opti. Cette fonction se nomme temps_routes_opti.
 
-    Routes1:
-    Routes2:
-    Routes3:
-    Routes4:
-    Routes5:
-    Routes6:
-    Routes7:
-    Routes8:
-    Routes9:
+    Routes1: 0.00 s
+    Routes2: 2.13 s
+    Routes3: 32.28 s
+    Routes4: 31.19 s
+    Routes5: 8.49 s
+    Routes6: 40.06 s
+    Routes7: 59.93 s
+    Routes8: 39.83 s
+    Routes9: 27.44 s
 
     Ces temps sont bien meilleurs !
 
@@ -266,3 +284,7 @@ from main import temps_routes_opti
     mais cela ne prend pas plus d'une dizaine de secondes ...
 
 """
+#print(temps_routes_opti("input/routes.1.in", "input/network.1.in"))
+#print(temps_routes_opti("input/routes.7.in", "input/network.7.in"))
+#print(temps_routes_opti("input/routes.8.in", "input/network.8.in"))
+#print(temps_routes_opti("input/routes.9.in", "input/network.9.in"))

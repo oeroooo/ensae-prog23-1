@@ -17,10 +17,12 @@ class Test_GraphLoading(unittest.TestCase):
         g = graph_from_file("input/network.1.in")
         g_mst = g.kruskal()
         self.assertEqual(g_mst.nb_edges, g.nb_nodes-1)
+        
     def test_network2(self):
         g = graph_from_file("input/network.3.in")
         g_mst = g.kruskal()
         self.assertEqual(g_mst.nb_edges, g.nb_nodes-1)
+
 
 if __name__ == '__main__':
     unittest.main()

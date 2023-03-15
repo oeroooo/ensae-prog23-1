@@ -15,7 +15,7 @@ class Test_Reachability(unittest.TestCase):
         g = graph_from_file("input/network.1.in")
         self.assertEqual(g.get_path_with_power(1, 12, 50), [1, 8, 3, 11, 2, 12])
         
-        #L'arête entre 3 et 11 est de puissance 41, donc le chemin doit changer
+        # L'arête entre 3 et 11 est de puissance 41, donc le chemin doit changer
         self.assertEqual(g.get_path_with_power(1, 12, 40), [1, 8, 3, 14, 7, 16, 12])
 
 if __name__ == '__main__':
