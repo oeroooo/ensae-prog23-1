@@ -261,6 +261,7 @@ class Graph:
         while self.get_path_with_power(src, dest, t) is None:
             t = t*2
         a = t // 2
+        #print("ok1")
         b = t
         c = 0
 
@@ -272,6 +273,8 @@ class Graph:
                 a = c + 1
             else:
                 b = c
+            #print("ok2")
+
         chemin = self.get_path_with_power(src, dest, b)
         puissance = b
         return chemin, puissance
@@ -644,3 +647,5 @@ def graph_from_file(filename):
             else:
                 raise Exception("Format incorrect")
     return g
+
+

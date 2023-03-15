@@ -1,9 +1,22 @@
 """
+-----------------------
 Ce document est un brouillon.
 Sont stockés ici des morceaux de codes et de test
 Le contenu de ce fichier n'est pas à prendre en compte dans la correction.
 Il a uniquement pour but de ne pas polluer les autres fichiers
+------------------------
 
+"""
+
+
+
+"""
+Ne fonctionne pas
+dot = graphviz.Digraph(comment='The Round Table')
+dot.node('A', 'King Arthur')  # doctest: +NO_EXE
+dot.node('B', 'Sir Bedevere the Wise')
+dot.node('L', 'Sir Lancelot the Brave')
+dot.render('exemple_graphique', view=True)
 """
 
 
