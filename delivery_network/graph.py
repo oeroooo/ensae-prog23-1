@@ -261,7 +261,7 @@ class Graph:
         while self.get_path_with_power(src, dest, t) is None:
             t = t*2
         a = t // 2
-        #print("ok1")
+        # print("ok1")
         b = t
         c = 0
 
@@ -273,7 +273,7 @@ class Graph:
                 a = c + 1
             else:
                 b = c
-            #print("ok2")
+            # print("ok2")
 
         chemin = self.get_path_with_power(src, dest, b)
         puissance = b
@@ -503,9 +503,9 @@ class Graph:
         Résultats :
         -----------
         pronfondeurs : dict
-            Dictionnaire qui à chaque sommet associe sa profondeur
+            Dictionnaire qui à chaque noeud associe sa profondeur
         parents : dict
-            Dictionnaire qui à chaque sommet associe une liste contenant son
+            Dictionnaire qui à chaque noeud associe une liste contenant son
             parent et la puissance de l'arête qui le relie à son parent
         """
         # On crée les dictionnaires
@@ -559,7 +559,8 @@ class Graph:
         -----------
         path_final : list
             chemin pour aller de src à dest
-        max(powerfinal) :  
+        max(powerfinal) :  int
+            puissance maximale rencontrée, qui est la min_power pour ce trajet
         """
 
         # Initialisation
@@ -708,3 +709,93 @@ def graph_from_file(filename):
             else:
                 raise Exception("Format incorrect")
     return g
+
+
+def trucks_from_file(filename):
+    file = open(filename, 'r')
+    lines = file.readlines()
+    file.close()
+    T = dict([(i, []) for i in range(1, int(lines.pop(0))+1)])
+    i = 0
+    for line in lines:
+        i += 1
+        words = line.split()
+        T[i].append(int(words[0]))
+        T[i].append(int(words[1]))
+    return T
+
+
+def routes_from_file(filename):
+    file = open(filename, 'r')
+    lines = file.readlines()
+    file.close()
+    R = dict([(i, []) for i in range(1, int(lines.pop(0))+1)])
+    i = 0
+    for line in lines:
+        i += 1
+        words = line.split()
+        R[i].append(int(words[0]))
+        R[i].append(int(words[1]))
+        R[i].append(int(words[2]))
+    return R
+
+
+def camion_par_routes(dict_route, dict_camion, tree):
+
+    """
+    On cherche à améliorer le dicitionnaire des routes.
+    Pour l'instant on a pour chaque trajet (numéroté par un entier),
+    une liste avec [source, destinationation, utilité].
+    On cherche pour chacun de ces trajets, à rajouter le min_power
+    pour effectuer le trajet et le meilleur camion.
+    Le meilleur camion est le camion le moins cher
+    parmi tous les camions qui ont la puissance nécéssaire.
+    Comme on a un stock infini de camions, on a pas à
+    s'inquiéter si un camion est mis pour plusieurs trajets.
+
+    Paramètres:
+        -----------
+        dict_route: dict
+            Dictionnaire des trajets qui à chaque trajet (numéroté par un
+            entier) associe la liste [source, destination, gain]
+        dict_camion: dict
+            Dictionnaire des camions qui à chaque camion (numéroté par un
+            entier) associe la liste [puissance, cout]
+        tree : Graph
+            Arbre couvrant minimal associé aux routes et camions
+
+        Résultats :
+        -----------
+        XX
+    """
+
+    dict_route_complete = dict_route
+
+    profondeurs, parents = tree.find_parents(1)
+
+    for trajet in dict_route_complete:
+        src, dest, gain = dict_route[trajet]
+        # On cherche le min_power du trajet
+        inutile, p = tree.min_power_opti(src, dest, profondeurs, parents)
+        dict_route_complete[trajet].append(p)
+        # On trouve les camions qui peuvent effectuer le trajet
+        camions_possibles = []
+        for camion in dict_camion:
+            puissance = dict_camion[camion][0]
+            cout = dict_camion[camion][1]
+            if puissance >= p:
+                camions_possibles.append(dict_camion[camion])
+        # On trouve celui au coût minimal
+        cout_minimal = min([i[1] for i in camions_possibles])
+        indice = [i[1] for i in camions_possibles].index(cout_minimal)
+        meilleur_camion = camions_possibles[indice]
+        dict_route_complete[trajet].append(meilleur_camion[1])
+
+    return dict_route_complete
+
+h = graph_from_file("input/network.1.in")
+h_mst = h.kruskal()
+r = routes_from_file("input/routes.1.in")
+t = trucks_from_file("input/trucks.1.in")
+
+print(camion_par_routes(r, t, h_mst))

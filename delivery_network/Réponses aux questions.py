@@ -162,7 +162,7 @@ from main import temps_routes_opti
 
     Pour routes1, on trouve 0.01 secondes
     Pour routes2, on trouve environ 8 500 heures 
-    (on a laissé tourner, et on a trouvé exactement 31883861 secondes)
+    (on a laissé tourner, et on a trouvé exactement 31 883 861 secondes)
 
     Pour une raison inconnu ce temps était auparavant de 30h, mais
     depuis une modification de get_path_with_power, il est devenu beaucoup plus
@@ -175,7 +175,7 @@ from main import temps_routes_opti
     avec succès.
 
 """
-#print(temps_routes("input/routes.1.in", "input/network.1.in"))
+# print(temps_routes("input/routes.1.in", "input/network.1.in"))
 # print(temps_routes("input/routes.2.in", "input/network.2.in"))
 # etc.
 
@@ -257,7 +257,7 @@ from main import temps_routes_opti
     remonter l'arbre (qui est maintenant orienté en quelque sorte)
     vers le parent jusqu'à trouver l'ancêtre commun.
     Ainsi, on ne visite plus les branches inutiles !
-    
+
     On crée ainsi la fonction min_power opti dans le fichier graph
 
 """

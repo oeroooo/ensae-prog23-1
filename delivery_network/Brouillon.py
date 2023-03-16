@@ -19,6 +19,7 @@ dot.node('L', 'Sir Lancelot the Brave')
 dot.render('exemple_graphique', view=True)
 """
 
+from graph import Graph, graph_from_file
 
 g = Graph([k for k in range(5)])
 
@@ -62,6 +63,9 @@ profondeurs, parents = h.find_parents(1)
 print(h.get_path_opti(4, 5, profondeurs, parents))
 """
 
+
+h = graph_from_file("input/network.00.in")
+h_mst = h.kruskal()
 
 
 
