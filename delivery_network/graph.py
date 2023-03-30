@@ -820,11 +820,41 @@ def camion_par_routes(dict_route, dict_camion, tree):
                 
     return dict_route_complete
 
-"""
-h = graph_from_file("input/network.6.in")
+
+h = graph_from_file("input/network.1.in")
 h_mst = h.kruskal()
 r = routes_from_file("input/routes.1.in")
-t = trucks_from_file("input/trucks.2.in")
+t = trucks_from_file("input/trucks.1.in")
 
 print(camion_par_routes(r, t, h_mst))
-"""
+
+
+def knapsack(B, pt, ut, n):
+   
+    """_summary_
+
+    Args:
+        B (int): Budget
+        pt (prix): _description_
+        ut (_type_): _description_
+        n (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    if n==0 or B==0:
+        return 0
+    if pt[n-1]>B:
+        return knapsack(B, pt, ut, n-1)
+    else:
+        return max(ut[n-1]+knapsack(B-pt[n-1],pt,ut,n-1),knapsack(B, pt, ut, n-1))
+
+def greedy(B, pt, ut):
+    for i in range(len(ut)):
+        
+    p_conso=0
+    for i in range(1, n+1):
+        if 
+
+
+
