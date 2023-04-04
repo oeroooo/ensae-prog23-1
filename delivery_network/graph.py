@@ -463,7 +463,7 @@ class Graph:
     def min_power_mst(self, src, dest):
 
         """
-        Dans le cas d'un arbre couvrant minimal, on a une unique
+        Dans le cas d'un arbre couvrant minimal, on a un unique
         chemin pour relier deux sommets. Il suffit donc de récupérer
         le power max rencontré dans le chemin pour
         connaitre la puissance minimale nécéssaire à effectuer le trajet
@@ -814,47 +814,103 @@ def camion_par_routes(dict_route, dict_camion, tree):
                 if dict_camion[camion][1] <= coutmin:
                     coutmin = dict_camion[camion][1]
                     meilleur_camion = indice_camion
-                    print(meilleur_camion)
 
         dict_route_complete[trajet].append(meilleur_camion)
                 
     return dict_route_complete
 
+def truckperpath(dict_route,dict_camion,tree):
+    dict_route_complete = dict_route
+    profondeurs, parents = tree.find_parents(1)
+    check = 0
+    for trajet in dict_route_complete:
+        check = check + 1
+        src, dest, gain = dict_route[trajet]
+        # On cherche le min_power du trajet
+        inutile, p = tree.min_power_opti(src, dest, profondeurs, parents)
+        dict_route_complete[trajet].append(p)
+        # On trouve les camions qui peuvent effectuer le trajet
+        camions_possibles = []
+        for camion in dict_camion:
+            puissance = dict_camion[camion][0]
+            if puissance >= p:
+                camions_possibles.append(camion)
+        # On trouve celui au coût minimal
+        cout_minimal = min([dict_camion[i][1] for i in camions_possibles])
+        indice = [dict_camion[i][1] for i in camions_possibles].index(cout_minimal)
+        meilleur_camion = camions_possibles[indice]
+        dict_route_complete[trajet].append(meilleur_camion)
+        dict_route_complete[trajet].append(cout_minimal)
+    return dict_route_complete
 
-h = graph_from_file("input/network.1.in")
+h = graph_from_file("input/network.3.in")
 h_mst = h.kruskal()
 r = routes_from_file("input/routes.1.in")
 t = trucks_from_file("input/trucks.1.in")
 
-print(camion_par_routes(r, t, h_mst))
+class usurp:
+    def __init__(self, u, p):
+        self.u = u
+        self.p = p
+        self.up = u/p
+        
 
-
-def knapsack(B, pt, ut, n):
+def knapsack_brute_force(B, dict_route_complete=None, pt=None, ut=None n=None):
    
     """_summary_
-
     Args:
         B (int): Budget
-        pt (prix): _description_
-        ut (_type_): _description_
-        n (_type_): _description_
+        pt (liste): prix des trajets/camion
+        ut (liste): utilité des trajets/camion
+        n (int): nombre de trajets possible
 
     Returns:
-        _type_: _description_
+        liste: collection de camion/trajet
     """
+    if n==None:
+        n = len(dict_route_complete)
+        pt = [dict_route_complete[i][-1] for i in dict_route_complete]
+        ut = [dict_route_complete[i][2] for i in dict_route_complete]
     if n==0 or B==0:
         return 0
     if pt[n-1]>B:
-        return knapsack(B, pt, ut, n-1)
+        return knapsack_brute_force(B, dict_route_complete, pt, ut, n-1)
     else:
-        return max(ut[n-1]+knapsack(B-pt[n-1],pt,ut,n-1),knapsack(B, pt, ut, n-1))
-
-def greedy(B, pt, ut):
-    for i in range(len(ut)):
-        
-    p_conso=0
-    for i in range(1, n+1):
-        if 
+        return max(ut[n-1]+knapsack_brute_force(B-pt[n-1], dict_route_complete ,pt,ut,n-1),knapsack_brute_force(B, dict_route_complete, pt, ut, n-1))
 
 
+def knapsack_greedy(B, dict_route_complete):
+    """_summary_
+    args:
+        B (int): Budget
+        dict_route_complete (dict): dictionnaire des camions affectées à des trajets
+    returns:
+        liste: Collection de camion et de trajet
+    """
+    n = len(dict_route_complete)
+    pt = [dict_route_complete[i][-1] for i in dict_route_complete]
+    ut = [dict_route_complete[i][2] for i in dict_route_complete]
+    up = [ut[i]/pt[i] for i in range(n)]
+    up = [usurp(ut[i],pt[i]) for i in range(n)]
+    up.sort(key=lambda usurp: usurp.up, reverse=True)
+    remaining_budget = B
+    collection_camiontrajet = []
+    stopProcess = False
+    while remaining_budget > 0 and stopProcess == False:
+        if pt[i] <= remaining_budget:
+            collection_camiontrajet.append(dict_route_complete[i][-2], dict_route_complete[i][0], dict_route_complete[i][1]])
+            remaining_budget = remaining_budget - pt[i]
+        i = i + 1
+        if i == n:
+            stopProcess = True
+    return collection_camiontrajet
 
+def knapsack_dynamic(B, dict_route_complete):
+    """_summary_
+    args:
+        B (int): Budget
+        dict_route_complete (dict): dictionnaire des camions affectées à des trajets
+    returns:
+        liste: Collection de camion et de trajet
+    """
+    
