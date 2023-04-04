@@ -843,10 +843,7 @@ def truckperpath(dict_route,dict_camion,tree):
         dict_route_complete[trajet].append(cout_minimal)
     return dict_route_complete
 
-h = graph_from_file("input/network.3.in")
-h_mst = h.kruskal()
-r = routes_from_file("input/routes.1.in")
-t = trucks_from_file("input/trucks.1.in")
+
 
 class usurp:
     def __init__(self, u, p):
@@ -854,7 +851,7 @@ class usurp:
         self.p = p
         self.up = u/p
         
-
+'''
 def knapsack_brute_force(B, dict_route_complete=None, pt=None, ut=None n=None):
    
     """_summary_
@@ -877,7 +874,7 @@ def knapsack_brute_force(B, dict_route_complete=None, pt=None, ut=None n=None):
         return knapsack_brute_force(B, dict_route_complete, pt, ut, n-1)
     else:
         return max(ut[n-1]+knapsack_brute_force(B-pt[n-1], dict_route_complete ,pt,ut,n-1),knapsack_brute_force(B, dict_route_complete, pt, ut, n-1))
-
+'''
 
 def knapsack_greedy(B, dict_route_complete):
     """_summary_
@@ -890,20 +887,27 @@ def knapsack_greedy(B, dict_route_complete):
     n = len(dict_route_complete)
     pt = [dict_route_complete[i][-1] for i in dict_route_complete]
     ut = [dict_route_complete[i][2] for i in dict_route_complete]
-    up = [ut[i]/pt[i] for i in range(n)]
     up = [usurp(ut[i],pt[i]) for i in range(n)]
     up.sort(key=lambda usurp: usurp.up, reverse=True)
     remaining_budget = B
-    collection_camiontrajet = []
+    collection_camion = []
+    dictionnaire_camion_trajet = {}
     stopProcess = False
+    utilite_totale = 0
+    i = 1
     while remaining_budget > 0 and stopProcess == False:
-        if pt[i] <= remaining_budget:
-            collection_camiontrajet.append(dict_route_complete[i][-2], dict_route_complete[i][0], dict_route_complete[i][1]])
-            remaining_budget = remaining_budget - pt[i]
+        if up[i].p <= remaining_budget:
+            collection_camion.append(dict_route_complete[i][-2])
+            if dict_route_complete[i][-2] not in dictionnaire_camion_trajet:
+                dictionnaire_camion_trajet[dict_route_complete[i][-2]] = [dict_route_complete[i][0:2]]
+            else:
+                dictionnaire_camion_trajet[dict_route_complete[i][-2]].append(dict_route_complete[i][0:2])
+            remaining_budget = remaining_budget - up[i].p
+            utilite_totale = utilite_totale + up[i].u
         i = i + 1
         if i == n:
             stopProcess = True
-    return collection_camiontrajet
+    return collection_camion, dictionnaire_camion_trajet, utilite_totale
 
 def knapsack_dynamic(B, dict_route_complete):
     """_summary_
@@ -913,5 +917,22 @@ def knapsack_dynamic(B, dict_route_complete):
     returns:
         liste: Collection de camion et de trajet
     """
+    K=[[0 for i in range(B+1)] for j in range(len(dict_route_complete)+1)]
+    for i in range(len(dict_route_complete)+1):
+        for w in range(B+1):
+            if i==0 or w==0:
+                K[i][w]=0
+            elif dict_route_complete[i-1][-1]<=w:
+                K[i][w]=max(dict_route_complete[i-1][2]+K[i-1][w-dict_route_complete[i-1][-1]],K[i-1][w])
+            else:
+                K[i][w]=K[i-1][w]
+    return K[len(dict_route_complete)][B]
 
-print("hello")
+h = graph_from_file("input/network.3.in")
+h_mst = h.kruskal()
+r = routes_from_file("input/routes.3.in")
+t = trucks_from_file("input/trucks.2.in")
+dict_route_complete = truckperpath(r,t,h_mst)
+a,b,c=knapsack_greedy(25e9, dict_route_complete)
+print(knapsack_dynamic(25e9, dict_route_complete))
+print(c)
