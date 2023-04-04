@@ -913,4 +913,5 @@ def knapsack_dynamic(B, dict_route_complete):
     returns:
         liste: Collection de camion et de trajet
     """
-    
+
+print("hello")
