@@ -820,6 +820,16 @@ def camion_par_routes(dict_route, dict_camion, tree):
     return dict_route_complete
 
 def truckperpath(dict_route,dict_camion,tree):
+    """_summary_
+    args:
+        dict_route: dict
+        dict_camion: dict
+        tree: Graph
+    returns:
+        dict_route_complete: dict
+
+    retourne un dictionnaire avec pour chaque trajet (numéroté par un entier), une liste avec [source, destination, utilité, min_power, meilleur camion, cout du meilleur camion]
+    """
     dict_route_complete = dict_route
     profondeurs, parents = tree.find_parents(1)
     check = 0
@@ -846,13 +856,22 @@ def truckperpath(dict_route,dict_camion,tree):
 
 
 class usurp:
+    """_summary_
+    args:
+        u: int
+        p: int
+    returns:
+        usurp: class
+    
+    classe qui permet de stocker les utilités et les prix des trajets/camions
+    """
     def __init__(self, u, p):
         self.u = u
         self.p = p
         self.up = u/p
         
-'''
-def knapsack_brute_force(B, dict_route_complete=None, pt=None, ut=None n=None):
+
+def knapsack_brute_force(B, dict_route_complete, pt=None, ut=None, n=None):
    
     """_summary_
     Args:
@@ -862,8 +881,11 @@ def knapsack_brute_force(B, dict_route_complete=None, pt=None, ut=None n=None):
         n (int): nombre de trajets possible
 
     Returns:
-        liste: collection de camion/trajet
+        liste: collection de camion/trajet, et l'utilité totale
+
+    knapsack_brute_force permet de trouver la collection de camion/trajet qui maximise l'utilité totale, en utilisant la méthode brute force
     """
+
     if n==None:
         n = len(dict_route_complete)
         pt = [dict_route_complete[i][-1] for i in dict_route_complete]
@@ -874,7 +896,6 @@ def knapsack_brute_force(B, dict_route_complete=None, pt=None, ut=None n=None):
         return knapsack_brute_force(B, dict_route_complete, pt, ut, n-1)
     else:
         return max(ut[n-1]+knapsack_brute_force(B-pt[n-1], dict_route_complete ,pt,ut,n-1),knapsack_brute_force(B, dict_route_complete, pt, ut, n-1))
-'''
 
 def knapsack_greedy(B, dict_route_complete):
     """_summary_
@@ -882,7 +903,9 @@ def knapsack_greedy(B, dict_route_complete):
         B (int): Budget
         dict_route_complete (dict): dictionnaire des camions affectées à des trajets
     returns:
-        liste: Collection de camion et de trajet
+        liste: Collection de camion et de trajet, et l'utilité totale
+    
+    knapsack_greedy permet de trouver la collection de camion/trajet qui maximise l'utilité totale, en utilisant la méthode gloutonne
     """
     n = len(dict_route_complete)
     pt = [dict_route_complete[i][-1] for i in dict_route_complete]
@@ -915,24 +938,31 @@ def knapsack_dynamic(B, dict_route_complete):
         B (int): Budget
         dict_route_complete (dict): dictionnaire des camions affectées à des trajets
     returns:
-        liste: Collection de camion et de trajet
+        liste: Collection de camion et de trajet, et l'utilité totale
+    
+    knapsack_dynamic permet de trouver la collection de camion/trajet qui maximise l'utilité totale, en utilisant la méthode dynamique
     """
-    K=[[0 for i in range(B+1)] for j in range(len(dict_route_complete)+1)]
-    for i in range(len(dict_route_complete)+1):
-        for w in range(B+1):
-            if i==0 or w==0:
-                K[i][w]=0
-            elif dict_route_complete[i-1][-1]<=w:
-                K[i][w]=max(dict_route_complete[i-1][2]+K[i-1][w-dict_route_complete[i-1][-1]],K[i-1][w])
+    n = len(dict_route_complete)
+    pt = [dict_route_complete[i][-1] for i in dict_route_complete]
+    ut = [dict_route_complete[i][2] for i in dict_route_complete]
+    K=[[0 for i in range(int(B)+1)] for j in range(len(dict_route_complete)+1)]
+    for i in range(n+1):
+        for j in range(int(B)+1):
+            if i==0 or j==0:
+                K[i][j]=0
+            elif pt[i-1]<=j:
+                K[i][j]=max(ut[i-1]+K[i-1][j-pt[i-1]],K[i-1][j])
             else:
-                K[i][w]=K[i-1][w]
-    return K[len(dict_route_complete)][B]
+                K[i][j]=K[i-1][j]
+    return K[n][int(B)]
 
 h = graph_from_file("input/network.3.in")
 h_mst = h.kruskal()
-r = routes_from_file("input/routes.3.in")
+r = routes_from_file("input/routes.1.in")
 t = trucks_from_file("input/trucks.2.in")
 dict_route_complete = truckperpath(r,t,h_mst)
-a,b,c=knapsack_greedy(25e9, dict_route_complete)
-print(knapsack_dynamic(25e9, dict_route_complete))
-print(c)
+#print(knapsack_brute_force(25e5, dict_route_complete))
+#a,b,c=knapsack_greedy(25e5, dict_route_complete)
+#print(knapsack_dynamic(25e5, dict_route_complete))
+#print(c)
+
